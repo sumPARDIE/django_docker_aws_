@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  web:
+    image: 073877141511.dkr.ecr.us-east-1.amazonaws.com/django_docker_aws:django_docker_aws
+    build: ./app
+    command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./app/:/usr/src/app/
+      - static_volume:/usr/src/app/static
+    expose:
+      - 8000
+  nginx:
+    image: 073877141511.dkr.ecr.us-east-1.amazonaws.com/django_docker_aws:django_docker_aws_nginx
+    build: ./nginx
+    volumes:
+      - static_volume:/usr/src/app/static
+    ports:
+      - 8000:80
+    depends_on:
+      - web
+volumes:
+  static_volume:
+
+
